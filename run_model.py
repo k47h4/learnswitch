@@ -454,10 +454,10 @@ def my_pypet_wrapper(traj, varied_params):
         'input_endtime' : 1500,
         'modulation_starttime' :0,
         'modulation_endtime' :1500,
-        #change this to switch between additive and multiplicative:
-        'modulation': 'additive',#'multiplicative',#'additive',# options: 'additive' or 'multiplicative'
-        'dispersion':1.0,
         
+        #change this to switch between additive and multiplicative:
+        'modulation': 'multiplicative',#'additive',# options: 'additive' or 'multiplicative'
+        'dispersion':1.0,
     
         # number of neurons
         'N_pyr' : N_pyr, # Number of excitatory L23 PYR cells
@@ -598,7 +598,7 @@ def postproc(traj, result_list):
 @ex.automain
 def main():
     #change this to switch between additive and multiplicative#
-    identifier = 'additive'#'multiplicative'# options:'additive' or 'multiplicative' or 'pyrsst'
+    identifier = 'multiplicative'# options:'additive' or 'multiplicative' or 'pyrsst'
     
     savepath = './'
     if not os.path.exists(savepath):
