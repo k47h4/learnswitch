@@ -220,11 +220,10 @@ def run_network(params,_run):
     W_td_pv = p.W_td_pv
 
 
-    print('td modulation of pyr, sst, vip')
-    print(W_td_pyr)
-    print(W_td_sst)
-    print(W_td_vip)
-
+    #print('td modulation of pyr, sst, vip')
+    #print(W_td_pyr)
+    #print(W_td_sst)
+    #print(W_td_vip)
     W_ff_pyr = p.W_ff_pyr
     W_ff_sst = p.W_ff_sst
     W_ff_pv = p.W_ff_pv
@@ -363,7 +362,7 @@ def run_network(params,_run):
 
             rate_pref = np.mean(pop_rate[start:end,i,:],0)    
             rate_nonpref = np.mean(pop_rate[np_start:np_end,i,:],0)    
-            pooled_sd = ((ntrials-1)*np.std(rate_pref) + (ntrials-1)*np.std(rate_nonpref))/(2*(ntrials-1)) 
+            pooled_sd = np.sqrt(((ntrials-1)*np.std(rate_pref)**2 + (ntrials-1)*np.std(rate_nonpref)**2)/(2*(ntrials-1))) 
             SI = (np.mean(rate_pref)-np.mean(rate_nonpref))/pooled_sd
             DIFF = (np.mean(rate_pref)-np.mean(rate_nonpref))
             responses.append({'population':pop_name+str(i),'rate_pref':np.mean(rate_pref),'rate_nonpref':np.mean(rate_nonpref), 'SI':SI, 'DIFF':DIFF, 'pooled_sd':pooled_sd})
@@ -456,7 +455,7 @@ def my_pypet_wrapper(traj, varied_params):
         'modulation_starttime' :0,
         'modulation_endtime' :1500,
         #change this to switch between additive and multiplicative:
-        'modulation': 'multiplicative',#'additive',# options: 'additive' or 'multiplicative'
+        'modulation': 'additive',#'multiplicative',#'additive',# options: 'additive' or 'multiplicative'
         'dispersion':1.0,
         
     
@@ -599,14 +598,14 @@ def postproc(traj, result_list):
 @ex.automain
 def main():
     #change this to switch between additive and multiplicative#
-    identifier = 'pyrsst'# options:'additive' or 'multiplicative' or 'pyrsst'
+    identifier = 'additive'#'multiplicative'# options:'additive' or 'multiplicative' or 'pyrsst'
     
     savepath = './'
     if not os.path.exists(savepath):
         os.mkdir(savepath)
 
     # Create the environment
-    env = Environment(trajectory='%s'%identifier,
+    env = Environment(trajectory='%si'%identifier,
                   comment='Experiment to measure selectivity '
                         'and noise correlations. '
                         ' of different cell populations'
@@ -615,7 +614,7 @@ def main():
                   add_time=False, # We don't want to add the current time to the name,
                   log_config='DEFAULT',
                   multiproc=True,
-                  ncores=20, # run code in parallel on ncores cores
+                  ncores=1, # run code in parallel on ncores cores
                   filename=savepath, # We only pass a folder here, so the name is chosen
                   # automatically to be the same as the Trajectory)
                   )
